@@ -4,8 +4,6 @@ import { defineProps } from "vue";
 defineProps({
   title: String,
 });
-
-// console.log("Title prop in CardFilm:", title);
 </script>
 
 <template>
