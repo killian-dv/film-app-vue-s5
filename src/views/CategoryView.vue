@@ -40,7 +40,7 @@ const prevPage = () => {
 </script>
 
 <template>
-  <h1>Actors</h1>
+  <h1>Categories</h1>
   <div>
     <div v-for="(category, index) in categories" :key="index">
       <CardCategory :name="category.name" />
