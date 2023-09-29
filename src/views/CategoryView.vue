@@ -1,19 +1,19 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
-import CardFilm from "../components/CardFilm.vue";
+import CardCategory from "../components/CardCategory.vue";
 import { onMounted } from "vue";
 
-let movies = ref([]);
+let categories = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
 
-const fetchMovies = async (page) => {
+const fetchCategory = async (page) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/movies?page=${page}`
+      `http://127.0.0.1:8000/api/categories?page=${page}`
     );
-    movies.value = response.data["hydra:member"];
+    categories.value = response.data["hydra:member"];
     totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30); // 30 items per page
   } catch (error) {
     console.error(error);
@@ -21,31 +21,29 @@ const fetchMovies = async (page) => {
 };
 
 onMounted(() => {
-  fetchMovies(currentPage.value);
+  fetchCategory(currentPage.value);
 });
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
-    fetchMovies(currentPage.value);
+    fetchCategory(currentPage.value);
   }
 };
 
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
-    fetchMovies(currentPage.value);
+    fetchCategory(currentPage.value);
   }
 };
 </script>
 
 <template>
-  <h1>Movies</h1>
+  <h1>Categories</h1>
   <div>
-    <div v-for="(movie, index) in movies" :key="index">
-      <RouterLink :to="`/movies/${movie.id}`">
-        <CardFilm :title="movie.title" />
-      </RouterLink>
+    <div v-for="(category, index) in categories" :key="index">
+      <CardCategory :name="category.name" />
     </div>
   </div>
 

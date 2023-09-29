@@ -1,19 +1,19 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
-import CardFilm from "../components/CardFilm.vue";
+import CardActor from "../components/CardActor.vue";
 import { onMounted } from "vue";
 
-let movies = ref([]);
+let actors = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
 
 const fetchMovies = async (page) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/movies?page=${page}`
+      `http://127.0.0.1:8000/api/actors?page=${page}`
     );
-    movies.value = response.data["hydra:member"];
+    actors.value = response.data["hydra:member"];
     totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30); // 30 items per page
   } catch (error) {
     console.error(error);
@@ -40,11 +40,11 @@ const prevPage = () => {
 </script>
 
 <template>
-  <h1>Movies</h1>
+  <h1>Actors</h1>
   <div>
-    <div v-for="(movie, index) in movies" :key="index">
-      <RouterLink :to="`/movies/${movie.id}`">
-        <CardFilm :title="movie.title" />
+    <div v-for="(actor, index) in actors" :key="index">
+      <RouterLink :to="`/actors/${actor.id}`">
+        <CardActor :first-name="actor.firstName" :lastName="actor.lastName" />
       </RouterLink>
     </div>
   </div>
