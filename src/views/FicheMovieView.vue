@@ -25,17 +25,18 @@ onMounted(async () => {
 
 <template>
   <div v-if="movie">
-    <h1>Fiche Movie</h1>
     <h2>{{ movie.title }}</h2>
-    <p>{{ movie.description }}</p>
-    <p>{{ formatDate(movie.releaseDate) }}</p>
-    <p>{{ movie.duration }} minutes</p>
-    <p>{{ movie.category.name }}</p>
-    <h4>Actors</h4>
-    <div v-for="(actor, index) in movie.actors" :key="index">
-      <RouterLink :to="`/actors/${actor.id}`">
-        <CardActor :first-name="actor.firstName" :lastName="actor.lastName" />
-      </RouterLink>
+    <p>Description : {{ movie.description }}</p>
+    <p>Date : {{ formatDate(movie.releaseDate) }}</p>
+    <p>Duration : {{ movie.duration }} minutes</p>
+    <p>Categoy : {{ movie.category.name }}</p>
+    <h3>Actors :</h3>
+    <div class="container-row">
+      <div v-for="(actor, index) in movie.actors" :key="index" class="card">
+        <RouterLink :to="`/actors/${actor.id}`">
+          <CardActor :first-name="actor.firstName" :lastName="actor.lastName" />
+        </RouterLink>
+      </div>
     </div>
   </div>
 </template>
