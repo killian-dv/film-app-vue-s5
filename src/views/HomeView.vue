@@ -25,7 +25,7 @@ onMounted(async () => {
 <template>
   <h1>Home</h1>
 
-  <h2>Our selections</h2>
+  <h2>Our selection</h2>
   <h3>Movies</h3>
   <div>
     <div v-for="(movie, index) in movies" :key="index">
