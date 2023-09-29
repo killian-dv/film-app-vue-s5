@@ -20,19 +20,22 @@ onMounted(async () => {
     `http://127.0.0.1:8000/api/movies/${movieId}`
   );
   movie.value = responseMovie.data;
-  console.log(movie.value);
 });
 </script>
 
 <template>
-  <h1>Fiche Movie</h1>
-  <h2>{{ movie.title }}</h2>
-  <p>{{ movie.description }}</p>
-  <p>{{ formatDate(movie.releaseDate) }}</p>
-  <p>{{ movie.duration }} minutes</p>
-  <p>{{ movie.category.name }}</p>
-  <h4>Actors</h4>
-  <div v-for="(actor, index) in movie.actors" :key="index">
-    <CardActor :first-name="actor.firstName" :lastName="actor.lastName" />
+  <div v-if="movie">
+    <h1>Fiche Movie</h1>
+    <h2>{{ movie.title }}</h2>
+    <p>{{ movie.description }}</p>
+    <p>{{ formatDate(movie.releaseDate) }}</p>
+    <p>{{ movie.duration }} minutes</p>
+    <p>{{ movie.category.name }}</p>
+    <h4>Actors</h4>
+    <div v-for="(actor, index) in movie.actors" :key="index">
+      <RouterLink :to="`/actors/${actor.id}`">
+        <CardActor :first-name="actor.firstName" :lastName="actor.lastName" />
+      </RouterLink>
+    </div>
   </div>
 </template>
