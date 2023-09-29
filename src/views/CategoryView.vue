@@ -40,9 +40,9 @@ const prevPage = () => {
 </script>
 
 <template>
-  <h1>Categories</h1>
-  <div>
-    <div v-for="(category, index) in categories" :key="index">
+  <h2>Categories</h2>
+  <div class="container-row">
+    <div v-for="(category, index) in categories" :key="index" class="card">
       <CardCategory :name="category.name" />
     </div>
   </div>
@@ -59,14 +59,4 @@ const prevPage = () => {
 </template>
 
 <style scoped>
-.pagination {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.inactive {
-  opacity: 0.5;
-  pointer-events: none;
-}
 </style>

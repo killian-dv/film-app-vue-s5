@@ -12,6 +12,6 @@ defineProps({
 
 <style scoped>
 h4 {
-  color: red;
+  color: white;
 }
 </style>

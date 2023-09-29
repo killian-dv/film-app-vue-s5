@@ -40,9 +40,9 @@ const prevPage = () => {
 </script>
 
 <template>
-  <h1>Movies</h1>
-  <div>
-    <div v-for="(movie, index) in movies" :key="index">
+  <h2>Movies</h2>
+  <div class="container-row">
+    <div v-for="(movie, index) in movies" :key="index" class="card">
       <RouterLink :to="`/movies/${movie.id}`">
         <CardFilm :title="movie.title" />
       </RouterLink>
@@ -60,15 +60,4 @@ const prevPage = () => {
   </div>
 </template>
 
-<style scoped>
-.pagination {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.inactive {
-  opacity: 0.5;
-  pointer-events: none;
-}
-</style>
+<style scoped></style>
