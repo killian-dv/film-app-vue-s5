@@ -43,7 +43,9 @@ const prevPage = () => {
   <h1>Movies</h1>
   <div>
     <div v-for="(movie, index) in movies" :key="index">
-      <CardFilm :title="movie.title" />
+      <RouterLink :to="`/movies/${movie.id}`">
+        <CardFilm :title="movie.title" />
+      </RouterLink>
     </div>
   </div>
 
