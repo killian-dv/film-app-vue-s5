@@ -1,5 +1,4 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
 import axios from "axios";
 import { ref } from "vue";
 import CardActor from "../components/CardActor.vue";
@@ -41,8 +40,6 @@ onMounted(async () => {
       v-if="index < 4"
     />
   </div>
-
-  <RouterView />
 </template>
 
 <style scoped></style>
