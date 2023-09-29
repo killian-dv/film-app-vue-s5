@@ -40,9 +40,9 @@ const prevPage = () => {
 </script>
 
 <template>
-  <h1>Actors</h1>
-  <div>
-    <div v-for="(actor, index) in actors" :key="index">
+  <h2>Actors</h2>
+  <div class="container-row">
+    <div v-for="(actor, index) in actors" :key="index" class="card">
       <RouterLink :to="`/actors/${actor.id}`">
         <CardActor :first-name="actor.firstName" :lastName="actor.lastName" />
       </RouterLink>
@@ -60,15 +60,4 @@ const prevPage = () => {
   </div>
 </template>
 
-<style scoped>
-.pagination {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.inactive {
-  opacity: 0.5;
-  pointer-events: none;
-}
-</style>
+<style scoped></style>

@@ -19,13 +19,15 @@ onMounted(async () => {
 
 <template>
   <div v-if="actor">
-    <h1>Fiche Actor</h1>
     <h2>{{ actor.firstName }} {{ actor.lastName }}</h2>
     <p>Nationality : {{ actor.nationality.nationality }}</p>
-    <div v-for="(movie, index) in actor.movies" :key="index">
-      <RouterLink :to="`/movies/${movie.id}`">
-        <CardFilm :title="movie.title" />
-      </RouterLink>
+    <h3>Movies :</h3>
+    <div class="container-row">
+      <div v-for="(movie, index) in actor.movies" :key="index" class="card">
+        <RouterLink :to="`/movies/${movie.id}`">
+          <CardFilm :title="movie.title" />
+        </RouterLink>
+      </div>
     </div>
   </div>
 </template>
