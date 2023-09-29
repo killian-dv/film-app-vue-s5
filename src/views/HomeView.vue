@@ -35,11 +35,13 @@ onMounted(async () => {
 
   <h3>Actors</h3>
   <div v-for="(actor, index) in actors" :key="index">
-    <CardActor
-      :first-name="actor.firstName"
-      :lastName="actor.lastName"
-      v-if="index < 4"
-    />
+    <RouterLink :to="`/actors/${actor.id}`">
+      <CardActor
+        :first-name="actor.firstName"
+        :lastName="actor.lastName"
+        v-if="index < 4"
+      />
+    </RouterLink>
   </div>
 </template>
 
