@@ -17,7 +17,6 @@ onMounted(async () => {
     "http://127.0.0.1:8000/api/actors?page=1"
   );
   actors.value = responseActors.data["hydra:member"];
-  console.log(actors.value[0].firstName);
 });
 </script>
 
@@ -28,7 +27,9 @@ onMounted(async () => {
   <h3>Movies</h3>
   <div>
     <div v-for="(movie, index) in movies" :key="index">
-      <CardFilm :title="movie.title" v-if="index < 4" />
+      <RouterLink :to="`/movies/${movie.id}`">
+        <CardFilm :title="movie.title" v-if="index < 4" />
+      </RouterLink>
     </div>
   </div>
 
