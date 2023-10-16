@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import CardFilm from "../components/CardFilm.vue";
 import { onMounted } from "vue";
 
@@ -8,12 +8,18 @@ let movies = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
 let searchbar = ref("");
+let token = ref(null); // Pour stocker le token JWT
 
 const fetchMovies = async (page) => {
   if (searchbar.value) {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/movies?title=${searchbar.value}&page=${page}`
+        `http://127.0.0.1:8000/api/movies?title=${searchbar.value}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+          },
+        }
       );
       movies.value = response.data["hydra:member"];
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30);
@@ -23,10 +29,15 @@ const fetchMovies = async (page) => {
   } else {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/movies?page=${page}`
+        `http://127.0.0.1:8000/api/movies?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+          },
+        }
       );
       movies.value = response.data["hydra:member"];
-      totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30); // 30 items per page
+      totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30);
     } catch (error) {
       console.error(error);
     }
@@ -38,8 +49,21 @@ const searchMovies = () => {
   fetchMovies(currentPage.value);
 };
 
+const getJwtToken = async () => {
+  try {
+    const response = await axios.post("http://127.0.0.1:8000/auth", {
+      email: "user@mail.com",
+      password: "password",
+    });
+    token.value = response.data.token; // Stockez le token JWT
+    fetchMovies(currentPage.value); // Appelez fetchMovies après avoir obtenu le token
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 onMounted(() => {
-  fetchMovies(currentPage.value);
+  getJwtToken(); // Obtenez le token JWT au chargement de la page
 });
 
 const nextPage = () => {
@@ -55,8 +79,6 @@ const prevPage = () => {
     fetchMovies(currentPage.value);
   }
 };
-
-console.log(searchbar.value);
 </script>
 
 <template>
@@ -71,7 +93,9 @@ console.log(searchbar.value);
         @input="searchMovies"
       />
     </div>
-    <button class="primary-button">Ajouter</button>
+    <RouterLink to="/movies/add">
+      <button class="primary-button">Ajouter</button>
+    </RouterLink>
   </div>
 
   <div class="container-row">

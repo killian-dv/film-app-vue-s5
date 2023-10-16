@@ -8,12 +8,18 @@ let actors = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
 let searchbar = ref("");
+let token = ref(null); // Pour stocker le token JWT
 
 const fetchActors = async (page) => {
   if (searchbar.value) {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/actors?lastName=${searchbar.value}&page=${page}`
+        `http://127.0.0.1:8000/api/actors?lastName=${searchbar.value}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+          },
+        }
       );
       actors.value = response.data["hydra:member"];
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30);
@@ -23,7 +29,12 @@ const fetchActors = async (page) => {
   } else {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/actors?page=${page}`
+        `http://127.0.0.1:8000/api/actors?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+          },
+        }
       );
       actors.value = response.data["hydra:member"];
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30); // 30 items per page
@@ -39,8 +50,21 @@ const searchActors = () => {
 };
 
 onMounted(() => {
-  fetchActors(currentPage.value);
+  getJwtToken(); // Obtenez le token JWT au chargement de la page
 });
+
+const getJwtToken = async () => {
+  try {
+    const response = await axios.post("http://127.0.0.1:8000/auth", {
+      email: "user@mail.com",
+      password: "password",
+    });
+    token.value = response.data.token; // Stockez le token JWT
+    fetchActors(currentPage.value); // Appelez fetchActors après avoir obtenu le token
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {

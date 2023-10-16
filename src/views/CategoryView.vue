@@ -8,39 +8,75 @@ let categories = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
 let searchbar = ref("");
+let token = ref(null); // Pour stocker le token JWT
 
-const fetchCategory = async (page) => {
-  try {
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/categories?page=${page}`
-    );
-    categories.value = response.data["hydra:member"];
-    totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30); // 30 items per page
-  } catch (error) {
-    console.error(error);
+const fetchCategories = async (page) => {
+  if (searchbar.value) {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/categories?name=${searchbar.value}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+          },
+        }
+      );
+      categories.value = response.data["hydra:member"];
+      totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30);
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/categories?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+          },
+        }
+      );
+      categories.value = response.data["hydra:member"];
+      totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30); // 30 items per page
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 
 const searchCategories = () => {
   currentPage.value = 1; // Reset to the first page when searching
-  fetchActors(currentPage.value);
+  fetchCategories(currentPage.value);
 };
 
 onMounted(() => {
-  fetchCategory(currentPage.value);
+  getJwtToken(); // Obtenez le token JWT au chargement de la page
 });
+
+const getJwtToken = async () => {
+  try {
+    const response = await axios.post("http://127.0.0.1:8000/auth", {
+      email: "user@mail.com",
+      password: "password",
+    });
+    token.value = response.data.token; // Stockez le token JWT
+    fetchCategories(currentPage.value); // Appelez fetchCategories après avoir obtenu le token
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
-    fetchCategory(currentPage.value);
+    fetchCategories(currentPage.value);
   }
 };
 
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
-    fetchCategory(currentPage.value);
+    fetchCategories(currentPage.value);
   }
 };
 </script>
