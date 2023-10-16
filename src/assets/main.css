@@ -62,3 +62,12 @@ h3 {
   color: white;
   cursor: pointer;
 }
+
+.primary-button {
+  background-color: #e50914;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
