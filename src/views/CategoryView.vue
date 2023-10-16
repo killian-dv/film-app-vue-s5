@@ -7,6 +7,7 @@ import { onMounted } from "vue";
 let categories = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
+let searchbar = ref("");
 
 const fetchCategory = async (page) => {
   try {
@@ -18,6 +19,11 @@ const fetchCategory = async (page) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const searchCategories = () => {
+  currentPage.value = 1; // Reset to the first page when searching
+  fetchActors(currentPage.value);
 };
 
 onMounted(() => {
@@ -41,6 +47,18 @@ const prevPage = () => {
 
 <template>
   <h2>Categories</h2>
+  <div class="header-container">
+    <div class="search-container">
+      <label for="search">Search</label>
+      <input
+        type="text"
+        id="search"
+        v-model="searchbar"
+        @input="searchCategories"
+      />
+    </div>
+    <button class="primary-button">Ajouter</button>
+  </div>
   <div class="container-row">
     <div v-for="(category, index) in categories" :key="index" class="card">
       <CardCategory :name="category.name" />
@@ -59,4 +77,10 @@ const prevPage = () => {
 </template>
 
 <style scoped>
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
 </style>
