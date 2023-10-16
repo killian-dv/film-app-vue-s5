@@ -7,18 +7,47 @@ import { onMounted } from "vue";
 
 let movies = ref("");
 let actors = ref("");
+let token = ref(null); // Pour stocker le token JWT
 
-onMounted(async () => {
-  const responseMovies = await axios.get(
-    "http://127.0.0.1:8000/api/movies?page=1"
-  );
-  movies.value = responseMovies.data["hydra:member"];
-  movies.value = movies.value.slice(0, 4);
-  const responseActors = await axios.get(
-    "http://127.0.0.1:8000/api/actors?page=1"
-  );
-  actors.value = responseActors.data["hydra:member"];
-  actors.value = actors.value.slice(0, 4);
+const fetchMoviesAndActors = async () => {
+  try {
+    // Obtenez le token JWT
+    const responseToken = await axios.post("http://127.0.0.1:8000/auth", {
+      email: "user@mail.com",
+      password: "password",
+    });
+    token.value = responseToken.data.token;
+
+    // Récupérez les films avec authentification
+    const responseMovies = await axios.get(
+      "http://127.0.0.1:8000/api/movies?page=1",
+      {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      }
+    );
+    movies.value = responseMovies.data["hydra:member"];
+    movies.value = movies.value.slice(0, 4);
+
+    // Récupérez les acteurs avec authentification
+    const responseActors = await axios.get(
+      "http://127.0.0.1:8000/api/actors?page=1",
+      {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      }
+    );
+    actors.value = responseActors.data["hydra:member"];
+    actors.value = actors.value.slice(0, 4);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(() => {
+  fetchMoviesAndActors(); // Obtenez les films et les acteurs avec authentification au chargement de la page
 });
 </script>
 
