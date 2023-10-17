@@ -17,7 +17,7 @@ const fetchMovies = async (page) => {
         `http://127.0.0.1:8000/api/movies?title=${searchbar.value}&page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+            Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
           },
         }
       );
@@ -32,7 +32,7 @@ const fetchMovies = async (page) => {
         `http://127.0.0.1:8000/api/movies?page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+            Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
           },
         }
       );
@@ -49,21 +49,8 @@ const searchMovies = () => {
   fetchMovies(currentPage.value);
 };
 
-const getJwtToken = async () => {
-  try {
-    const response = await axios.post("http://127.0.0.1:8000/auth", {
-      email: "user@mail.com",
-      password: "password",
-    });
-    token.value = response.data.token; // Stockez le token JWT
-    fetchMovies(currentPage.value); // Appelez fetchMovies après avoir obtenu le token
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 onMounted(() => {
-  getJwtToken(); // Obtenez le token JWT au chargement de la page
+  fetchMovies(currentPage.value);
 });
 
 const nextPage = () => {

@@ -17,6 +17,9 @@ const route = useRoute();
       :class="{ active: route.path === '/categories' }"
       >Categories</RouterLink
     >
+    <RouterLink to="/account" :class="{ active: route.path === '/users' }"
+      >Mon compte</RouterLink
+    >
   </header>
 
   <RouterView />

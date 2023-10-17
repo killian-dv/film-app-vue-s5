@@ -11,19 +11,12 @@ let token = ref(null); // Pour stocker le token JWT
 
 const fetchMoviesAndActors = async () => {
   try {
-    // Obtenez le token JWT
-    const responseToken = await axios.post("http://127.0.0.1:8000/auth", {
-      email: "user@mail.com",
-      password: "password",
-    });
-    token.value = responseToken.data.token;
-
     // Récupérez les films avec authentification
     const responseMovies = await axios.get(
       "http://127.0.0.1:8000/api/movies?page=1",
       {
         headers: {
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${localStorage.token}`,
         },
       }
     );
@@ -35,7 +28,7 @@ const fetchMoviesAndActors = async () => {
       "http://127.0.0.1:8000/api/actors?page=1",
       {
         headers: {
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${localStorage.token}`,
         },
       }
     );
