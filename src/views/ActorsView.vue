@@ -17,7 +17,7 @@ const fetchActors = async (page) => {
         `http://127.0.0.1:8000/api/actors?lastName=${searchbar.value}&page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+            Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
           },
         }
       );
@@ -32,7 +32,7 @@ const fetchActors = async (page) => {
         `http://127.0.0.1:8000/api/actors?page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${token.value}`, // Ajoutez le token JWT aux en-têtes
+            Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
           },
         }
       );
@@ -50,21 +50,8 @@ const searchActors = () => {
 };
 
 onMounted(() => {
-  getJwtToken(); // Obtenez le token JWT au chargement de la page
+  fetchActors(currentPage.value);
 });
-
-const getJwtToken = async () => {
-  try {
-    const response = await axios.post("http://127.0.0.1:8000/auth", {
-      email: "user@mail.com",
-      password: "password",
-    });
-    token.value = response.data.token; // Stockez le token JWT
-    fetchActors(currentPage.value); // Appelez fetchActors après avoir obtenu le token
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
