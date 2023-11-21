@@ -26,7 +26,7 @@ if (props.movieId) {
       console.log(movie.value);
       fields.title = movie.value.title || "";
       fields.description = movie.value.description || "";
-      fields.releaseDate = movie.value.releaseDate || "";
+      fields.releaseDate = movie.value.releaseDate.slice(0, 10) || "";
       fields.duration = movie.value.duration || "";
       fields.category = movie.value.category.name || "";
       fields.actors = movie.value.actors || [];
