@@ -3,11 +3,13 @@ import axios from "axios";
 import { ref } from "vue";
 import CardCategory from "../components/CardCategory.vue";
 import { onMounted } from "vue";
+import { useRouter, RouterLink } from "vue-router";
 
 let categories = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
 let searchbar = ref("");
+const router = useRouter();
 let token = ref(null); // Pour stocker le token JWT
 
 const fetchCategories = async (page) => {
@@ -25,6 +27,8 @@ const fetchCategories = async (page) => {
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30);
     } catch (error) {
       console.error(error);
+      localStorage.removeItem("token");
+      router.push({ name: "Login" });
     }
   } else {
     try {
@@ -40,6 +44,8 @@ const fetchCategories = async (page) => {
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30); // 30 items per page
     } catch (error) {
       console.error(error);
+      localStorage.removeItem("token");
+      router.push({ name: "Login" });
     }
   }
 };

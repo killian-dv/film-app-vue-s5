@@ -2,11 +2,11 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import CardActor from "../components/CardActor.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const movieId = route.params.id;
-
+const router = useRouter();
 let movie = ref("");
 
 const formatDate = (dateString) => {
@@ -16,10 +16,23 @@ const formatDate = (dateString) => {
 };
 
 onMounted(async () => {
-  const responseMovie = await axios.get(
-    `http://127.0.0.1:8000/api/movies/${movieId}`
-  );
-  movie.value = responseMovie.data;
+  try {
+    const responseMovie = await axios.get(
+      `http://127.0.0.1:8000/api/movies/${movieId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
+    movie.value = responseMovie.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.code === 401) {
+      localStorage.removeItem("token");
+      router.push({ name: "Login" });
+    }
+  }
 });
 </script>
 

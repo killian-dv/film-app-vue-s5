@@ -3,12 +3,14 @@ import axios from "axios";
 import { ref, watch } from "vue";
 import CardFilm from "../components/CardFilm.vue";
 import { onMounted } from "vue";
+import { useRouter, RouterLink } from "vue-router";
 
 let movies = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
 let searchbar = ref("");
 let token = ref(null); // Pour stocker le token JWT
+const router = useRouter();
 
 const fetchMovies = async (page) => {
   if (searchbar.value) {
@@ -25,6 +27,8 @@ const fetchMovies = async (page) => {
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30);
     } catch (error) {
       console.error(error);
+      localStorage.removeItem("token");
+      router.push({ name: "Login" });
     }
   } else {
     try {
@@ -40,6 +44,8 @@ const fetchMovies = async (page) => {
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30);
     } catch (error) {
       console.error(error);
+      localStorage.removeItem("token");
+      router.push({ name: "Login" });
     }
   }
 };

@@ -2,18 +2,32 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import CardFilm from "../components/CardFilm.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 const actorId = route.params.id;
 
 let actor = ref("");
 
 onMounted(async () => {
-  const responseActor = await axios.get(
-    `http://127.0.0.1:8000/api/actors/${actorId}`
-  );
-  actor.value = responseActor.data;
+  try {
+    const responseActor = await axios.get(
+      `http://127.0.0.1:8000/api/actors/${actorId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
+    actor.value = responseActor.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.code === 401) {
+      localStorage.removeItem("token");
+      router.push({ name: "Login" });
+    }
+  }
 });
 </script>
 
