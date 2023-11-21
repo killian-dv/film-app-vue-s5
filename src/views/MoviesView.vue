@@ -28,7 +28,7 @@ const fetchMovies = async (page) => {
     } catch (error) {
       console.error(error);
       localStorage.removeItem("token");
-      router.push({ name: "Login" });
+      router.push({ name: "login" });
     }
   } else {
     try {
@@ -45,7 +45,7 @@ const fetchMovies = async (page) => {
     } catch (error) {
       console.error(error);
       localStorage.removeItem("token");
-      router.push({ name: "Login" });
+      router.push({ name: "login" });
     }
   }
 };

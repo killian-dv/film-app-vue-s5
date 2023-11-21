@@ -25,7 +25,7 @@ onMounted(async () => {
     console.error(error);
     if (error.response.data.code === 401) {
       localStorage.removeItem("token");
-      router.push({ name: "Login" });
+      router.push({ name: "login" });
     }
   }
 });

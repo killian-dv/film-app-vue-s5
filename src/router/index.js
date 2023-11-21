@@ -5,9 +5,10 @@ import ActorsView from "../views/ActorsView.vue";
 import CategoryView from "../views/CategoryView.vue";
 import FicheMovieView from "../views/FicheMovieView.vue";
 import FicheActorView from "../views/FicheActorView.vue";
-// import AddMovieView from "../views/AddMovieView.vue";
+import AddMovieView from "../views/AddMovieView.vue";
 import LoginView from "../views/LoginView.vue";
 import AccountView from "../views/AccountView.vue";
+import EditMovieView from "../views/EditMovieView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,12 @@ const router = createRouter({
       meta: { requiresAuth: true }, // Cette route nécessite une authentification
     },
     {
+      path: "/movies/:id/edit",
+      name: "editMovie",
+      component: EditMovieView,
+      meta: { requiresAuth: true }, // Cette route nécessite une authentification
+    },
+    {
       path: "/actors",
       name: "actors",
       component: ActorsView,
@@ -59,12 +66,12 @@ const router = createRouter({
       component: CategoryView,
       meta: { requiresAuth: true }, // Cette route nécessite une authentification
     },
-    // {
-    //   path: "/movies/add",
-    //   name: "addMovie",
-    //   component: AddMovieView,
-    //   meta: { requiresAuth: true }, // Cette route nécessite une authentification
-    // },
+    {
+      path: "/movies/add",
+      name: "addMovie",
+      component: AddMovieView,
+      meta: { requiresAuth: true }, // Cette route nécessite une authentification
+    },
   ],
 });
 

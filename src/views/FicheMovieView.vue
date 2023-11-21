@@ -30,7 +30,7 @@ onMounted(async () => {
     console.error(error);
     if (error.response.data.code === 401) {
       localStorage.removeItem("token");
-      router.push({ name: "Login" });
+      router.push({ name: "login" });
     }
   }
 });
@@ -38,7 +38,12 @@ onMounted(async () => {
 
 <template>
   <div v-if="movie">
-    <h2>{{ movie.title }}</h2>
+    <div class="row">
+      <h2>{{ movie.title }}</h2>
+      <RouterLink :to="`/movies/${movieId}/edit`">
+        <button class="primary-button">Edit</button>
+      </RouterLink>
+    </div>
     <p>Description : {{ movie.description }}</p>
     <p>Date : {{ formatDate(movie.releaseDate) }}</p>
     <p>Duration : {{ movie.duration }} minutes</p>
@@ -53,3 +58,13 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style>
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  height: min-content;
+}
+</style>
