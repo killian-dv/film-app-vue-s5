@@ -9,6 +9,7 @@ const props = defineProps({
   movieId: String,
 });
 
+const router = useRouter();
 let movie = ref("");
 
 if (props.movieId) {
@@ -28,7 +29,7 @@ if (props.movieId) {
       fields.description = movie.value.description || "";
       fields.releaseDate = movie.value.releaseDate.slice(0, 10) || "";
       fields.duration = movie.value.duration || "";
-      fields.category = movie.value.category.name || "";
+      fields.category = movie.value.category["@id"] || "";
       fields.actors = movie.value.actors || [];
     } catch (error) {
       console.error(error);
@@ -87,6 +88,73 @@ onMounted(() => {
   fetchCategories();
   fetchActors();
 });
+
+const getActorIds = () => {
+  return fields.actors.map((actor) => actor["@id"]);
+};
+
+const sendEditMovie = async () => {
+  console.log(fields);
+  const actorIds = getActorIds();
+  try {
+    const response = await axios.patch(
+      `http://127.0.0.1:8000/api/movies/${props.movieId}`,
+      {
+        title: fields.title,
+        description: fields.description,
+        releaseDate: fields.releaseDate,
+        duration: fields.duration,
+        category: fields.category,
+        actors: actorIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+          "Content-Type": "application/merge-patch+json",
+        },
+      }
+    );
+    console.log("Movie added successfully:", response.data);
+    router.push({ name: "movies" });
+  } catch (error) {
+    console.error("Error adding movie:", error);
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      router.push({ name: "login" });
+    }
+  }
+};
+
+const sendAddMovie = async () => {
+  console.log(fields);
+  const actorIds = getActorIds();
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8000/api/movies",
+      {
+        title: fields.title,
+        description: fields.description,
+        releaseDate: fields.releaseDate,
+        duration: fields.duration,
+        category: fields.category,
+        actors: actorIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
+    console.log("Movie added successfully:", response.data);
+    router.push({ name: "movies" });
+  } catch (error) {
+    console.error("Error adding movie:", error);
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      router.push({ name: "login" });
+    }
+  }
+};
 </script>
 
 <template>
@@ -111,7 +179,11 @@ onMounted(() => {
       <label for="category">Category</label>
       <select id="category" v-model="fields.category" v-if="categories">
         <option value="" disabled selected>Please select category</option>
-        <option v-for="(category, index) in categories" :key="index">
+        <option
+          v-for="(category, index) in categories"
+          :key="index"
+          :value="category['@id']"
+        >
           {{ category.name }}
         </option>
       </select>
@@ -129,7 +201,16 @@ onMounted(() => {
         track-by="@id"
       />
     </div>
-    <button class="primary-button">Ajouter</button>
+    <button
+      @click="sendEditMovie()"
+      v-if="props.movieId"
+      class="primary-button"
+    >
+      Editer
+    </button>
+    <button @click="sendAddMovie()" v-else class="primary-button">
+      Ajouter
+    </button>
   </div>
 </template>
 

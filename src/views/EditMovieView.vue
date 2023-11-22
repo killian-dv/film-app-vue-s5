@@ -7,6 +7,6 @@ const movieId = route.params.id;
 </script>
 
 <template>
-  <h1>Ajouter un Film</h1>
+  <h1>Editer un Film</h1>
   <MovieForm :movieId="movieId" />
 </template>
