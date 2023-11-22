@@ -59,7 +59,7 @@ onMounted(async () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .row {
   display: flex;
   flex-wrap: nowrap;

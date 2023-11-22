@@ -33,7 +33,12 @@ onMounted(async () => {
 
 <template>
   <div v-if="actor">
-    <h2>{{ actor.firstName }} {{ actor.lastName }}</h2>
+    <div class="row">
+      <h2>{{ actor.firstName }} {{ actor.lastName }}</h2>
+      <RouterLink :to="`/actors/${actorId}/edit`">
+        <button class="primary-button">Edit</button>
+      </RouterLink>
+    </div>
     <p>Nationality : {{ actor.nationality.nationality }}</p>
     <h3>Movies :</h3>
     <div class="container-row">
@@ -45,3 +50,13 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  height: min-content;
+}
+</style>

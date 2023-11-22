@@ -84,7 +84,9 @@ const prevPage = () => {
         @input="searchActors"
       />
     </div>
-    <button class="primary-button">Ajouter</button>
+    <RouterLink to="/actors/add">
+      <button class="primary-button">Ajouter</button>
+    </RouterLink>
   </div>
   <div class="container-row">
     <div v-for="(actor, index) in actors" :key="index" class="card">
