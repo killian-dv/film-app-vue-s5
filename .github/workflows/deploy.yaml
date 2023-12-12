@@ -31,4 +31,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           local-dir: dist
-          remote-dir: /home/mmi21g05/public_html/movies-app
+          remote-dir: /home/mmi21g05/public_html/movies-app/
