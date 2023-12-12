@@ -24,11 +24,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: 📂 SFTP uploader
+        uses: wangyucode/sftp-upload-action@v2.0.2
         with:
-          server: ${{ secrets.SERVER }}
+          host: ${{ secrets.SERVER }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          local-dir: ./dist/
-          server-dir: /home/mmi21g05/public_html/movies-app/
+          localDir: "./dist/"
+          remoteDir: "/home/mmi21g05/public_html/movies-app/"
