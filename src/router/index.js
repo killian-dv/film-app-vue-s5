@@ -11,6 +11,7 @@ import AccountView from "../views/AccountView.vue";
 import FicheCategoryView from "../views/FicheCategoryView.vue";
 import AddCategoryView from "../views/AddCategoryView.vue";
 import EditCategoryView from "../views/EditCategoryView.vue";
+import EditAccountView from "../views/EditAccountView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -84,6 +85,12 @@ const router = createRouter({
       path: "/movies/add",
       name: "addMovie",
       component: AddMovieView,
+      meta: { requiresAuth: true }, // Cette route nécessite une authentification
+    },
+    {
+      path: "/account/edit",
+      name: "editAccount",
+      component: EditAccountView,
       meta: { requiresAuth: true }, // Cette route nécessite une authentification
     },
   ],
