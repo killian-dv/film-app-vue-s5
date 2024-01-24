@@ -1,9 +1,8 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 import CardCategory from "../components/CardCategory.vue";
-import { onMounted } from "vue";
-import { useRouter, RouterLink } from "vue-router";
 
 let categories = ref([]);
 let currentPage = ref(1);
@@ -86,11 +85,15 @@ const prevPage = () => {
         @input="searchCategories"
       />
     </div>
-    <button class="primary-button">Ajouter</button>
+    <RouterLink :to="`/categories/add`">
+      <button class="primary-button">Ajouter</button>
+    </RouterLink>
   </div>
   <div class="container-row">
     <div v-for="(category, index) in categories" :key="index" class="card">
-      <CardCategory :name="category.name" />
+      <RouterLink :to="`/categories/${category.id}`">
+        <CardCategory :name="category.name" />
+      </RouterLink>
     </div>
   </div>
 

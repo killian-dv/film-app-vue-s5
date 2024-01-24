@@ -8,9 +8,9 @@ import FicheActorView from "../views/FicheActorView.vue";
 import AddMovieView from "../views/AddMovieView.vue";
 import LoginView from "../views/LoginView.vue";
 import AccountView from "../views/AccountView.vue";
-import EditMovieView from "../views/EditMovieView.vue";
-import AddActorView from "../views/AddActorView.vue";
-import EditActorView from "../views/EditActorView.vue";
+import FicheCategoryView from "../views/FicheCategoryView.vue";
+import AddCategoryView from "../views/AddCategoryView.vue";
+import EditCategoryView from "../views/EditCategoryView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,21 +45,9 @@ const router = createRouter({
       meta: { requiresAuth: true }, // Cette route nécessite une authentification
     },
     {
-      path: "/movies/:id/edit",
-      name: "editMovie",
-      component: EditMovieView,
-      meta: { requiresAuth: true }, // Cette route nécessite une authentification
-    },
-    {
       path: "/actors",
       name: "actors",
       component: ActorsView,
-      meta: { requiresAuth: true }, // Cette route nécessite une authentification
-    },
-    {
-      path: "/actors/add",
-      name: "addActor",
-      component: AddActorView,
       meta: { requiresAuth: true }, // Cette route nécessite une authentification
     },
     {
@@ -69,15 +57,27 @@ const router = createRouter({
       meta: { requiresAuth: true }, // Cette route nécessite une authentification
     },
     {
-      path: "/actors/:id/edit",
-      name: "editActor",
-      component: EditActorView,
-      meta: { requiresAuth: true }, // Cette route nécessite une authentification
-    },
-    {
       path: "/categories",
       name: "categories",
       component: CategoryView,
+      meta: { requiresAuth: true }, // Cette route nécessite une authentification
+    },
+    {
+      path: "/categories/:id",
+      name: "ficheCategory",
+      component: FicheCategoryView,
+      meta: { requiresAuth: true }, // Cette route nécessite une authentification
+    },
+    {
+      path: "/categories/add",
+      name: "addCategories",
+      component: AddCategoryView,
+      meta: { requiresAuth: true }, // Cette route nécessite une authentification
+    },
+    {
+      path: "/categories/:id/edit",
+      name: "editCategories",
+      component: EditCategoryView,
       meta: { requiresAuth: true }, // Cette route nécessite une authentification
     },
     {
