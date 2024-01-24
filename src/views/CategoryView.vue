@@ -1,13 +1,14 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 import CardCategory from "../components/CardCategory.vue";
-import { onMounted } from "vue";
 
 let categories = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
 let searchbar = ref("");
+const router = useRouter();
 let token = ref(null); // Pour stocker le token JWT
 
 const fetchCategories = async (page) => {
@@ -25,6 +26,8 @@ const fetchCategories = async (page) => {
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30);
     } catch (error) {
       console.error(error);
+      localStorage.removeItem("token");
+      router.push({ name: "login" });
     }
   } else {
     try {
@@ -40,6 +43,8 @@ const fetchCategories = async (page) => {
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30); // 30 items per page
     } catch (error) {
       console.error(error);
+      localStorage.removeItem("token");
+      router.push({ name: "login" });
     }
   }
 };
@@ -80,11 +85,15 @@ const prevPage = () => {
         @input="searchCategories"
       />
     </div>
-    <button class="primary-button">Ajouter</button>
+    <RouterLink :to="`/categories/add`">
+      <button class="primary-button">Ajouter</button>
+    </RouterLink>
   </div>
   <div class="container-row">
     <div v-for="(category, index) in categories" :key="index" class="card">
-      <CardCategory :name="category.name" />
+      <RouterLink :to="`/categories/${category.id}`">
+        <CardCategory :name="category.name" />
+      </RouterLink>
     </div>
   </div>
 

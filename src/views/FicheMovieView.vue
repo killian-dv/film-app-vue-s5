@@ -2,11 +2,11 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import CardActor from "../components/CardActor.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const movieId = route.params.id;
-
+const router = useRouter();
 let movie = ref("");
 
 const formatDate = (dateString) => {
@@ -16,16 +16,34 @@ const formatDate = (dateString) => {
 };
 
 onMounted(async () => {
-  const responseMovie = await axios.get(
-    `http://127.0.0.1:8000/api/movies/${movieId}`
-  );
-  movie.value = responseMovie.data;
+  try {
+    const responseMovie = await axios.get(
+      `http://127.0.0.1:8000/api/movies/${movieId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
+    movie.value = responseMovie.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.code === 401) {
+      localStorage.removeItem("token");
+      router.push({ name: "login" });
+    }
+  }
 });
 </script>
 
 <template>
   <div v-if="movie">
-    <h2>{{ movie.title }}</h2>
+    <div class="row">
+      <h2>{{ movie.title }}</h2>
+      <RouterLink :to="`/movies/${movieId}/edit`">
+        <button class="primary-button">Edit</button>
+      </RouterLink>
+    </div>
     <p>Description : {{ movie.description }}</p>
     <p>Date : {{ formatDate(movie.releaseDate) }}</p>
     <p>Duration : {{ movie.duration }} minutes</p>
@@ -40,3 +58,13 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  height: min-content;
+}
+</style>

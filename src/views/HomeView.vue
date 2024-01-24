@@ -4,10 +4,12 @@ import { ref } from "vue";
 import CardActor from "../components/CardActor.vue";
 import CardFilm from "../components/CardFilm.vue";
 import { onMounted } from "vue";
+import { useRouter, RouterLink } from "vue-router";
 
 let movies = ref("");
 let actors = ref("");
 let token = ref(null); // Pour stocker le token JWT
+const router = useRouter();
 
 const fetchMoviesAndActors = async () => {
   try {
@@ -36,6 +38,8 @@ const fetchMoviesAndActors = async () => {
     actors.value = actors.value.slice(0, 4);
   } catch (error) {
     console.error(error);
+    localStorage.removeItem("token");
+    router.push({ name: "login" });
   }
 };
 

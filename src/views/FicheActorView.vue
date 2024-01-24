@@ -2,24 +2,43 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import CardFilm from "../components/CardFilm.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 const actorId = route.params.id;
 
 let actor = ref("");
 
 onMounted(async () => {
-  const responseActor = await axios.get(
-    `http://127.0.0.1:8000/api/actors/${actorId}`
-  );
-  actor.value = responseActor.data;
+  try {
+    const responseActor = await axios.get(
+      `http://127.0.0.1:8000/api/actors/${actorId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
+    actor.value = responseActor.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.code === 401) {
+      localStorage.removeItem("token");
+      router.push({ name: "login" });
+    }
+  }
 });
 </script>
 
 <template>
   <div v-if="actor">
-    <h2>{{ actor.firstName }} {{ actor.lastName }}</h2>
+    <div class="row">
+      <h2>{{ actor.firstName }} {{ actor.lastName }}</h2>
+      <RouterLink :to="`/actors/${actorId}/edit`">
+        <button class="primary-button">Edit</button>
+      </RouterLink>
+    </div>
     <p>Nationality : {{ actor.nationality.nationality }}</p>
     <h3>Movies :</h3>
     <div class="container-row">
@@ -31,3 +50,13 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  height: min-content;
+}
+</style>

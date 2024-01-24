@@ -3,12 +3,14 @@ import axios from "axios";
 import { ref } from "vue";
 import CardActor from "../components/CardActor.vue";
 import { onMounted } from "vue";
+import { useRouter, RouterLink } from "vue-router";
 
 let actors = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(1);
 let searchbar = ref("");
 let token = ref(null); // Pour stocker le token JWT
+const router = useRouter();
 
 const fetchActors = async (page) => {
   if (searchbar.value) {
@@ -25,6 +27,8 @@ const fetchActors = async (page) => {
       totalPages.value = Math.ceil(response.data["hydra:totalItems"] / 30);
     } catch (error) {
       console.error(error);
+      localStorage.removeItem("token");
+      router.push({ name: "login" });
     }
   } else {
     try {
@@ -80,7 +84,9 @@ const prevPage = () => {
         @input="searchActors"
       />
     </div>
-    <button class="primary-button">Ajouter</button>
+    <RouterLink to="/actors/add">
+      <button class="primary-button">Ajouter</button>
+    </RouterLink>
   </div>
   <div class="container-row">
     <div v-for="(actor, index) in actors" :key="index" class="card">
