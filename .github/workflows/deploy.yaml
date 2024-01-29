@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build --base=/movies-app/
+        run: npm run build
 
       - name: 📂 SFTP uploader
         uses: wangyucode/sftp-upload-action@v2.0.2
