@@ -7,8 +7,10 @@ export default ({ mode }) => {
   // Load app-level env vars to node-level env vars.
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
+  const base = mode === "production" ? "/movies-app/" : "./";
+
   return defineConfig({
-    base: "./",
+    base,
     plugins: [vue()],
     resolve: {
       alias: {
