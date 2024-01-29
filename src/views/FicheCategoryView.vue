@@ -12,7 +12,7 @@ let category = ref("");
 onMounted(async () => {
   try {
     const responseCategory = await axios.get(
-      `http://127.0.0.1:8000/api/categories/${categoryId}`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/categories/${categoryId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -31,11 +31,14 @@ onMounted(async () => {
 
 const deleteCategory = async () => {
   try {
-    await axios.delete(`http://127.0.0.1:8000/api/categories/${categoryId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
-      },
-    });
+    await axios.delete(
+      `${import.meta.env.VITE_API_BASE_URL}/api/categories/${categoryId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
     router.push({ name: "categories" });
   } catch (error) {
     console.error(error);

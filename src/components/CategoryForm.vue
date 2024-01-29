@@ -14,7 +14,9 @@ if (props.categoryId) {
   const fetchCategory = async () => {
     try {
       const responseCategory = await axios.get(
-        `http://127.0.0.1:8000/api/categories/${props.categoryId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/categories/${
+          props.categoryId
+        }`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -43,7 +45,7 @@ const sendEditCategory = async () => {
   console.log(fields);
   try {
     const response = await axios.patch(
-      `http://127.0.0.1:8000/api/categories/${props.categoryId}`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/categories/${props.categoryId}`,
       {
         name: fields.name,
       },
@@ -69,7 +71,7 @@ const sendAddCategory = async () => {
   console.log(fields);
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/api/categories",
+      `${import.meta.env.VITE_API_BASE_URL}/api/categories`,
       {
         name: fields.name,
       },

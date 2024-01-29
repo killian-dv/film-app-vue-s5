@@ -15,7 +15,9 @@ const fetchCategories = async (page) => {
   if (searchbar.value) {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/categories?name=${searchbar.value}&page=${page}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/categories?name=${
+          searchbar.value
+        }&page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -32,7 +34,7 @@ const fetchCategories = async (page) => {
   } else {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/categories?page=${page}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/categories?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes

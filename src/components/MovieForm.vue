@@ -1,9 +1,8 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted, reactive } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { defineProps, onMounted, reactive, ref } from "vue";
 import VueMultiselect from "vue-multiselect/src/Multiselect.vue";
-import { defineProps } from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   movieId: String,
@@ -16,7 +15,7 @@ if (props.movieId) {
   const fetchMovie = async () => {
     try {
       const responseMovie = await axios.get(
-        `http://127.0.0.1:8000/api/movies/${props.movieId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/movies/${props.movieId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -56,11 +55,14 @@ const actors = ref([]);
 
 const fetchCategories = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/categories`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
-      },
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/api/categories`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
     categories.value = response.data["hydra:member"];
   } catch (error) {
     console.error(error);
@@ -71,11 +73,14 @@ const fetchCategories = async () => {
 
 const fetchActors = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/actors`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
-      },
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/api/actors`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
     actors.value = response.data["hydra:member"];
   } catch (error) {
     console.error(error);
@@ -98,7 +103,7 @@ const sendEditMovie = async () => {
   const actorIds = getActorIds();
   try {
     const response = await axios.patch(
-      `http://127.0.0.1:8000/api/movies/${props.movieId}`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/movies/${props.movieId}`,
       {
         title: fields.title,
         description: fields.description,
@@ -130,7 +135,7 @@ const sendAddMovie = async () => {
   const actorIds = getActorIds();
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/api/movies",
+      `${import.meta.env.VITE_API_BASE_URL}/api/movies`,
       {
         title: fields.title,
         description: fields.description,

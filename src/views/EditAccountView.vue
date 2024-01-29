@@ -18,11 +18,14 @@ onMounted(() => {
 
 const fetchuser = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/me`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
-      },
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/api/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
     userId.value = response.data.id;
   } catch (error) {
     console.error(error);
@@ -34,8 +37,10 @@ const fetchuser = async () => {
 const sendEditAccount = async () => {
   console.log(fields);
   try {
-    const response = await axios.patch(
-      `http://127.0.0.1:8000/api/users/${userId.value}`,
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/api/users/${
+        userId.value
+      }/reset-password`,
       {
         mail: fields.mail,
         password: fields.password,
