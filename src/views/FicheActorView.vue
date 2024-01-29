@@ -1,8 +1,8 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
-import CardFilm from "../components/CardFilm.vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import CardFilm from "../components/CardFilm.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -13,7 +13,7 @@ let actor = ref("");
 onMounted(async () => {
   try {
     const responseActor = await axios.get(
-      `http://127.0.0.1:8000/api/actors/${actorId}`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/actors/${actorId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes

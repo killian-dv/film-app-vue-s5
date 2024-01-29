@@ -1,9 +1,8 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 import CardActor from "../components/CardActor.vue";
-import { onMounted } from "vue";
-import { useRouter, RouterLink } from "vue-router";
 
 let actors = ref([]);
 let currentPage = ref(1);
@@ -16,7 +15,9 @@ const fetchActors = async (page) => {
   if (searchbar.value) {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/actors?lastName=${searchbar.value}&page=${page}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/actors?lastName=${
+          searchbar.value
+        }&page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -33,7 +34,7 @@ const fetchActors = async (page) => {
   } else {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/actors?page=${page}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/actors?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
