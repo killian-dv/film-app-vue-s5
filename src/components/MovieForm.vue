@@ -30,6 +30,7 @@ if (props.movieId) {
       fields.duration = movie.value.duration || "";
       fields.category = movie.value.category["@id"] || "";
       fields.actors = movie.value.actors || [];
+      fields.image = movie.value.imageName || "";
     } catch (error) {
       console.error(error);
       if (error.response.data.code === 401) {
@@ -48,6 +49,7 @@ const fields = reactive({
   duration: "",
   category: "",
   actors: [],
+  image: "",
 });
 
 const categories = ref([]);
@@ -98,24 +100,29 @@ const getActorIds = () => {
   return fields.actors.map((actor) => actor["@id"]);
 };
 
+const onFileChange = (event) => {
+  fields.image = event.target.files[0];
+};
+
 const sendEditMovie = async () => {
   console.log(fields);
   const actorIds = getActorIds();
   try {
+    let data = new FormData();
+    data.append("title", fields.title);
+    data.append("description", fields.description);
+    data.append("releaseDate", fields.releaseDate);
+    data.append("duration", fields.duration);
+    data.append("category", fields.category);
+    data.append("actors", actorIds);
+    data.append("imageFile", fields.image);
     const response = await axios.patch(
       `${import.meta.env.VITE_API_BASE_URL}/api/movies/${props.movieId}`,
-      {
-        title: fields.title,
-        description: fields.description,
-        releaseDate: fields.releaseDate,
-        duration: fields.duration,
-        category: fields.category,
-        actors: actorIds,
-      },
+      data,
       {
         headers: {
           Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
-          "Content-Type": "application/merge-patch+json",
+          "Content-Type": "multipart/form-data",
         },
       }
     );
@@ -134,19 +141,22 @@ const sendAddMovie = async () => {
   console.log(fields);
   const actorIds = getActorIds();
   try {
+    let data = new FormData();
+    data.append("title", fields.title);
+    data.append("description", fields.description);
+    data.append("releaseDate", fields.releaseDate);
+    data.append("duration", fields.duration);
+    data.append("category", fields.category);
+    data.append("actors", actorIds);
+    data.append("imageFile", fields.image);
+    console.log(fields.image);
     const response = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/api/movies`,
-      {
-        title: fields.title,
-        description: fields.description,
-        releaseDate: fields.releaseDate,
-        duration: fields.duration,
-        category: fields.category,
-        actors: actorIds,
-      },
+      data,
       {
         headers: {
           Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+          "Content-Type": "multipart/form-data",
         },
       }
     );
@@ -194,7 +204,11 @@ const sendAddMovie = async () => {
       </select>
     </div>
     <div class="input-group">
-      <label for="actors">Category</label>
+      <label for="image">Image</label>
+      <input id="image" type="file" v-on:change="onFileChange" />
+    </div>
+    <div class="input-group">
+      <label for="actors">Actors</label>
       <VueMultiselect
         v-if="actors"
         v-model="fields.actors"
