@@ -1,7 +1,6 @@
 <script setup>
 import axios from "axios";
-import { onMounted } from "vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 let mail = ref("");
@@ -12,6 +11,8 @@ onMounted(() => {
   isTokenValid();
 });
 
+console.log(import.meta.env);
+
 const isTokenValid = () => {
   if (localStorage.getItem("token")) {
     router.push("/"); // Redirigez vers la page d'accueil si le token est valide
@@ -20,10 +21,13 @@ const isTokenValid = () => {
 
 const login = async () => {
   try {
-    const response = await axios.post("http://127.0.0.1:8000/auth", {
-      email: mail.value,
-      password: password.value,
-    });
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/auth`,
+      {
+        email: mail.value,
+        password: password.value,
+      }
+    );
     localStorage.setItem("token", response.data.token); // Stockez le token JWT dans localStorage
     router.push("/"); // Redirigez vers la page d'accueil après la connexion réussie
   } catch (error) {

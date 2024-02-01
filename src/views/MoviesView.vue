@@ -1,9 +1,8 @@
 <script setup>
 import axios from "axios";
-import { ref, watch } from "vue";
+import { onMounted, ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 import CardFilm from "../components/CardFilm.vue";
-import { onMounted } from "vue";
-import { useRouter, RouterLink } from "vue-router";
 
 let movies = ref([]);
 let currentPage = ref(1);
@@ -16,7 +15,9 @@ const fetchMovies = async (page) => {
   if (searchbar.value) {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/movies?title=${searchbar.value}&page=${page}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/movies?title=${
+          searchbar.value
+        }&page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -33,7 +34,7 @@ const fetchMovies = async (page) => {
   } else {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/movies?page=${page}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/movies?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -94,7 +95,7 @@ const prevPage = () => {
   <div class="container-row">
     <div v-for="(movie, index) in movies" :key="index" class="card">
       <RouterLink :to="`/movies/${movie.id}`">
-        <CardFilm :title="movie.title" />
+        <CardFilm :title="movie.title" :image="movie.imageName" />
       </RouterLink>
     </div>
   </div>

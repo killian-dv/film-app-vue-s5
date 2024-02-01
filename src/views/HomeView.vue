@@ -1,10 +1,9 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 import CardActor from "../components/CardActor.vue";
 import CardFilm from "../components/CardFilm.vue";
-import { onMounted } from "vue";
-import { useRouter, RouterLink } from "vue-router";
 
 let movies = ref("");
 let actors = ref("");
@@ -15,7 +14,7 @@ const fetchMoviesAndActors = async () => {
   try {
     // Récupérez les films avec authentification
     const responseMovies = await axios.get(
-      "http://127.0.0.1:8000/api/movies?page=1",
+      `${import.meta.env.VITE_API_BASE_URL}/api/movies?page=1`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.token}`,
@@ -27,7 +26,7 @@ const fetchMoviesAndActors = async () => {
 
     // Récupérez les acteurs avec authentification
     const responseActors = await axios.get(
-      "http://127.0.0.1:8000/api/actors?page=1",
+      `${import.meta.env.VITE_API_BASE_URL}/api/actors?page=1`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.token}`,
