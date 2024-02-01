@@ -29,15 +29,38 @@ onMounted(async () => {
     }
   }
 });
+
+const deleteActor = async () => {
+  try {
+    await axios.delete(
+      `${import.meta.env.VITE_API_BASE_URL}/api/actors/${actorId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
+    router.push({ name: "actors" });
+  } catch (error) {
+    console.error(error);
+    if (error.response.data.code === 401) {
+      localStorage.removeItem("token");
+      router.push({ name: "login" });
+    }
+  }
+};
 </script>
 
 <template>
   <div v-if="actor">
     <div class="row">
       <h2>{{ actor.firstName }} {{ actor.lastName }}</h2>
-      <RouterLink :to="`/actors/${actorId}/edit`">
-        <button class="primary-button">Edit</button>
-      </RouterLink>
+      <div class="row">
+        <RouterLink :to="`/actors/${actorId}/edit`">
+          <button class="primary-button">Edit</button>
+        </RouterLink>
+        <button class="primary-button" @click="deleteActor">Delete</button>
+      </div>
     </div>
     <p>Nationality : {{ actor.nationality.nationality }}</p>
     <h3>Movies :</h3>
@@ -58,5 +81,6 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   height: min-content;
+  gap: 1rem;
 }
 </style>
