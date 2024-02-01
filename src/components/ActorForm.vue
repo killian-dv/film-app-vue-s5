@@ -1,9 +1,8 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted, reactive } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { defineProps, onMounted, reactive, ref } from "vue";
 import VueMultiselect from "vue-multiselect/src/Multiselect.vue";
-import { defineProps } from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   actorId: String,
@@ -29,7 +28,7 @@ if (props.actorId) {
   const fetchActor = async () => {
     try {
       const responseActor = await axios.get(
-        `http://127.0.0.1:8000/api/actors/${props.actorId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/actors/${props.actorId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -55,11 +54,14 @@ if (props.actorId) {
 
 const fetchMovies = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/movies`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
-      },
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/api/movies`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
     movies.value = response.data["hydra:member"];
   } catch (error) {
     console.error(error);
@@ -71,7 +73,7 @@ const fetchMovies = async () => {
 const fetchNationalities = async () => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/nationalities`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/nationalities`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -96,7 +98,7 @@ const sendEditActor = async () => {
   const moviesIds = getMoviesIds();
   try {
     const response = await axios.patch(
-      `http://127.0.0.1:8000/api/actors/${props.actorId}`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/actors/${props.actorId}`,
       {
         firstName: fields.firstName,
         lastName: fields.lastName,
@@ -125,7 +127,7 @@ const sendAddActor = async () => {
   const moviesIds = getMoviesIds();
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/api/actors",
+      `${import.meta.env.VITE_API_BASE_URL}/api/actors`,
       {
         firstName: fields.firstName,
         lastName: fields.lastName,

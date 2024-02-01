@@ -1,9 +1,8 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted, reactive } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { defineProps, onMounted, reactive, ref } from "vue";
 import VueMultiselect from "vue-multiselect/src/Multiselect.vue";
-import { defineProps } from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   movieId: String,
@@ -16,7 +15,7 @@ if (props.movieId) {
   const fetchMovie = async () => {
     try {
       const responseMovie = await axios.get(
-        `http://127.0.0.1:8000/api/movies/${props.movieId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/movies/${props.movieId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -31,6 +30,7 @@ if (props.movieId) {
       fields.duration = movie.value.duration || "";
       fields.category = movie.value.category["@id"] || "";
       fields.actors = movie.value.actors || [];
+      fields.image = movie.value.imageName || "";
     } catch (error) {
       console.error(error);
       if (error.response.data.code === 401) {
@@ -49,6 +49,7 @@ const fields = reactive({
   duration: "",
   category: "",
   actors: [],
+  image: "",
 });
 
 const categories = ref([]);
@@ -56,11 +57,14 @@ const actors = ref([]);
 
 const fetchCategories = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/categories`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
-      },
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/api/categories`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
     categories.value = response.data["hydra:member"];
   } catch (error) {
     console.error(error);
@@ -71,11 +75,14 @@ const fetchCategories = async () => {
 
 const fetchActors = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/actors`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
-      },
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/api/actors`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+        },
+      }
+    );
     actors.value = response.data["hydra:member"];
   } catch (error) {
     console.error(error);
@@ -93,24 +100,29 @@ const getActorIds = () => {
   return fields.actors.map((actor) => actor["@id"]);
 };
 
+const onFileChange = (event) => {
+  fields.image = event.target.files[0];
+};
+
 const sendEditMovie = async () => {
   console.log(fields);
   const actorIds = getActorIds();
   try {
+    let data = new FormData();
+    data.append("title", fields.title);
+    data.append("description", fields.description);
+    data.append("releaseDate", fields.releaseDate);
+    data.append("duration", fields.duration);
+    data.append("category", fields.category);
+    data.append("actors", actorIds);
+    data.append("imageFile", fields.image);
     const response = await axios.patch(
-      `http://127.0.0.1:8000/api/movies/${props.movieId}`,
-      {
-        title: fields.title,
-        description: fields.description,
-        releaseDate: fields.releaseDate,
-        duration: fields.duration,
-        category: fields.category,
-        actors: actorIds,
-      },
+      `${import.meta.env.VITE_API_BASE_URL}/api/movies/${props.movieId}`,
+      data,
       {
         headers: {
           Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
-          "Content-Type": "application/merge-patch+json",
+          "Content-Type": "multipart/form-data",
         },
       }
     );
@@ -129,19 +141,22 @@ const sendAddMovie = async () => {
   console.log(fields);
   const actorIds = getActorIds();
   try {
+    let data = new FormData();
+    data.append("title", fields.title);
+    data.append("description", fields.description);
+    data.append("releaseDate", fields.releaseDate);
+    data.append("duration", fields.duration);
+    data.append("category", fields.category);
+    data.append("actors", actorIds);
+    data.append("imageFile", fields.image);
+    console.log(fields.image);
     const response = await axios.post(
-      "http://127.0.0.1:8000/api/movies",
-      {
-        title: fields.title,
-        description: fields.description,
-        releaseDate: fields.releaseDate,
-        duration: fields.duration,
-        category: fields.category,
-        actors: actorIds,
-      },
+      `${import.meta.env.VITE_API_BASE_URL}/api/movies`,
+      data,
       {
         headers: {
           Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
+          "Content-Type": "multipart/form-data",
         },
       }
     );
@@ -189,7 +204,11 @@ const sendAddMovie = async () => {
       </select>
     </div>
     <div class="input-group">
-      <label for="actors">Category</label>
+      <label for="image">Image</label>
+      <input id="image" type="file" v-on:change="onFileChange" />
+    </div>
+    <div class="input-group">
+      <label for="actors">Actors</label>
       <VueMultiselect
         v-if="actors"
         v-model="fields.actors"

@@ -1,5 +1,4 @@
 <script setup>
-import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -14,6 +13,10 @@ const logout = () => {
 <template>
   <div class="container">
     <p>You are logged in</p>
+    <RouterLink to="/account/edit">
+      <button class="primary-button">Edit profil</button>
+    </RouterLink>
+
     <button @click="logout" class="primary-button">Log out</button>
   </div>
 </template>

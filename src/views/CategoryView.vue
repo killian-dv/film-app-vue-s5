@@ -1,9 +1,8 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 import CardCategory from "../components/CardCategory.vue";
-import { onMounted } from "vue";
-import { useRouter, RouterLink } from "vue-router";
 
 let categories = ref([]);
 let currentPage = ref(1);
@@ -16,7 +15,9 @@ const fetchCategories = async (page) => {
   if (searchbar.value) {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/categories?name=${searchbar.value}&page=${page}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/categories?name=${
+          searchbar.value
+        }&page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -33,7 +34,7 @@ const fetchCategories = async (page) => {
   } else {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/categories?page=${page}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/categories?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.token}`, // Ajoutez le token JWT aux en-têtes
@@ -86,11 +87,15 @@ const prevPage = () => {
         @input="searchCategories"
       />
     </div>
-    <button class="primary-button">Ajouter</button>
+    <RouterLink :to="`/categories/add`">
+      <button class="primary-button">Ajouter</button>
+    </RouterLink>
   </div>
   <div class="container-row">
     <div v-for="(category, index) in categories" :key="index" class="card">
-      <CardCategory :name="category.name" />
+      <RouterLink :to="`/categories/${category.id}`">
+        <CardCategory :name="category.name" />
+      </RouterLink>
     </div>
   </div>
 
