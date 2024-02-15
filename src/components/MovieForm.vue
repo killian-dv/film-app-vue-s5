@@ -114,9 +114,9 @@ const sendEditMovie = async () => {
     data.append("releaseDate", fields.releaseDate);
     data.append("duration", fields.duration);
     data.append("category", fields.category);
-    data.append("actors", actorIds);
+    data.append("actors", JSON.stringify(actorIds));
     data.append("imageFile", fields.image);
-    const response = await axios.patch(
+    const response = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/api/movies/${props.movieId}`,
       data,
       {
@@ -147,9 +147,10 @@ const sendAddMovie = async () => {
     data.append("releaseDate", fields.releaseDate);
     data.append("duration", fields.duration);
     data.append("category", fields.category);
-    data.append("actors", actorIds);
+    data.append("actors", JSON.stringify(actorIds));
     data.append("imageFile", fields.image);
     console.log(fields.image);
+    console.log(data);
     const response = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/api/movies`,
       data,
@@ -205,7 +206,12 @@ const sendAddMovie = async () => {
     </div>
     <div class="input-group">
       <label for="image">Image</label>
-      <input id="image" type="file" v-on:change="onFileChange" />
+      <input
+        id="image"
+        type="file"
+        accept="image/*"
+        v-on:change="onFileChange"
+      />
     </div>
     <div class="input-group">
       <label for="actors">Actors</label>
