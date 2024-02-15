@@ -67,6 +67,7 @@ const deleteMovie = async () => {
         <button class="primary-button" @click="deleteMovie">Delete</button>
       </div>
     </div>
+    <img :src="movie.imageName" alt="image" class="image" />
     <p>Description : {{ movie.description }}</p>
     <p>Date : {{ formatDate(movie.releaseDate) }}</p>
     <p>Duration : {{ movie.duration }} minutes</p>
@@ -90,5 +91,11 @@ const deleteMovie = async () => {
   align-items: center;
   height: min-content;
   gap: 1rem;
+}
+.image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  margin: 1rem 0;
 }
 </style>
